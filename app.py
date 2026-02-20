@@ -60,60 +60,140 @@ def preprocess_input(data: dict) -> pd.DataFrame:
 def home():
     return render_template_string("""
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-    <title>Heart Disease AI</title>
+    <meta charset="UTF-8">
+    <title>Heart Disease AI Predictor</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
     <style>
-        body { font-family: Arial; background: #f4f6f8; }
-        .card {
-            width: 420px;
-            margin: 40px auto;
-            padding: 20px;
-            background: white;
-            border-radius: 8px;
-            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+        body {
+            font-family: Arial, sans-serif;
+            background: #f4f6f8;
         }
-        input, button {
+        .card {
+            max-width: 480px;
+            margin: 40px auto;
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+        }
+        h2 {
+            text-align: center;
+        }
+        label {
+            font-weight: bold;
+            margin-top: 10px;
+            display: block;
+        }
+        input, select, button {
             width: 100%;
-            margin: 6px 0;
             padding: 8px;
+            margin-top: 5px;
         }
         button {
+            margin-top: 15px;
             background: #007bff;
             color: white;
             border: none;
+            font-size: 16px;
             cursor: pointer;
+            border-radius: 5px;
+        }
+        button:hover {
+            background: #0056b3;
         }
         pre {
             background: #eee;
             padding: 10px;
+            margin-top: 10px;
+            border-radius: 5px;
             white-space: pre-wrap;
         }
     </style>
 </head>
+
 <body>
 
 <div class="card">
-    <h2>Heart Disease AI Predictor</h2>
+    <h2>❤️ Heart Disease AI Predictor</h2>
 
-    <input id="age" placeholder="Age">
-    <input id="sex" placeholder="Sex (0=female, 1=male)">
-    <input id="cp" placeholder="Chest Pain (0-3)">
-    <input id="trestbps" placeholder="Resting BP">
-    <input id="chol" placeholder="Cholesterol">
-    <input id="fbs" placeholder="FBS (0/1)">
-    <input id="restecg" placeholder="Rest ECG (0-2)">
-    <input id="thalach" placeholder="Max Heart Rate">
-    <input id="exang" placeholder="Exercise Angina (0/1)">
-    <input id="oldpeak" placeholder="Oldpeak">
-    <input id="slope" placeholder="Slope (0-2)">
-    <input id="ca" placeholder="CA (0-4)">
-    <input id="thal" placeholder="Thal (1-3)">
+    <label>Age</label>
+    <input type="number" id="age" value="55" min="1" max="120">
+
+    <label>Sex</label>
+    <select id="sex">
+        <option value="0">Female</option>
+        <option value="1" selected>Male</option>
+    </select>
+
+    <label>Chest Pain Type</label>
+    <select id="cp">
+        <option value="0">0 - Typical Angina</option>
+        <option value="1">1 - Atypical Angina</option>
+        <option value="2" selected>2 - Non-anginal Pain</option>
+        <option value="3">3 - Asymptomatic</option>
+    </select>
+
+    <label>Resting Blood Pressure (mm Hg)</label>
+    <input type="number" id="trestbps" value="120" min="80" max="250">
+
+    <label>Cholesterol (mg/dl)</label>
+    <input type="number" id="chol" value="200" min="100" max="600">
+
+    <label>Fasting Blood Sugar</label>
+    <select id="fbs">
+        <option value="0" selected>≤ 120 mg/dl</option>
+        <option value="1">> 120 mg/dl</option>
+    </select>
+
+    <label>Rest ECG</label>
+    <select id="restecg">
+        <option value="0" selected>Normal</option>
+        <option value="1">ST-T Abnormality</option>
+        <option value="2">Left Ventricular Hypertrophy</option>
+    </select>
+
+    <label>Max Heart Rate</label>
+    <input type="number" id="thalach" value="150" min="60" max="250">
+
+    <label>Exercise Induced Angina</label>
+    <select id="exang">
+        <option value="0" selected>No</option>
+        <option value="1">Yes</option>
+    </select>
+
+    <label>Oldpeak (ST Depression)</label>
+    <input type="number" step="0.1" id="oldpeak" value="1.0" min="0" max="10">
+
+    <label>Slope</label>
+    <select id="slope">
+        <option value="0">Upsloping</option>
+        <option value="1" selected>Flat</option>
+        <option value="2">Downsloping</option>
+    </select>
+
+    <label>Number of Major Vessels (CA)</label>
+    <select id="ca">
+        <option value="0" selected>0</option>
+        <option value="1">1</option>
+        <option value="2">2</option>
+        <option value="3">3</option>
+        <option value="4">4</option>
+    </select>
+
+    <label>Thalassemia</label>
+    <select id="thal">
+        <option value="1">Normal</option>
+        <option value="2" selected>Fixed Defect</option>
+        <option value="3">Reversible Defect</option>
+    </select>
 
     <button onclick="predict()">Predict</button>
 
     <h3>AI Response</h3>
-    <pre id="result">Waiting for input...</pre>
+    <pre id="result">Waiting for prediction...</pre>
 </div>
 
 <script>
